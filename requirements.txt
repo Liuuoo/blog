@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+python-frontmatter
+markdown
+pygments
+pymdown-extensions
+pyyaml

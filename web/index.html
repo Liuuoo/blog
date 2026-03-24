@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人博客</title>
+    <meta name="description" content="个人博客 — 简约、专业的写作空间">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Serif+SC:wght@600;700&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.css">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <div id="progress-bar"></div>
+
+    <!-- 导航栏 -->
+    <header id="site-header">
+        <div class="header-inner">
+            <span class="site-title" id="blog-title" onclick="location.hash='#home'">个人博客</span>
+            <span class="header-nav" id="header-subtitle">随笔 · 技术 · 思考</span>
+        </div>
+    </header>
+
+    <!-- 密码弹窗 -->
+    <div class="modal-overlay" id="password-modal">
+        <div class="modal-box">
+            <div class="modal-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            </div>
+            <h3 id="modal-title">加密内容</h3>
+            <p class="modal-desc">该分类已设置密码保护，请输入密码以继续访问</p>
+            <input type="password" id="modal-password" placeholder="请输入密码" autocomplete="off">
+            <p class="modal-error" id="modal-error"></p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeModal()">取消</button>
+                <button class="btn-confirm" onclick="submitPassword()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 重命名弹窗 -->
+    <div class="modal-overlay" id="rename-modal">
+        <div class="modal-box">
+            <div class="modal-icon modal-icon-edit">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+            </div>
+            <h3>重命名分类</h3>
+            <p class="modal-desc">修改分类的显示名称（不影响磁盘文件夹）</p>
+            <input type="text" id="rename-input" placeholder="输入新的显示名" autocomplete="off">
+            <input type="password" id="rename-password" placeholder="管理员密码" autocomplete="off">
+            <p class="modal-error" id="rename-error"></p>
+            <div class="modal-actions">
+                <button class="btn-cancel" onclick="closeRenameModal()">取消</button>
+                <button class="btn-confirm" onclick="submitRename()">确认</button>
+            </div>
+        </div>
+    </div>
+
+    <main>
+        <!-- 首页视图 -->
+        <section id="home-view">
+            <!-- Hero 欢迎区 -->
+            <div class="hero" id="hero-section">
+                <h1 id="hero-title">欢迎来到我的博客</h1>
+                <p id="hero-subtitle">在这里记录生活的点滴、技术的探索与思想的碎片</p>
+                <div class="stats-row" id="stats-row">
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-posts">-</div>
+                        <div class="stat-label">篇文章</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-cats">-</div>
+                        <div class="stat-label">个分类</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number" id="stat-updated">-</div>
+                        <div class="stat-label">最近更新</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 最近文章区 -->
+            <div class="section-title">
+                <h2>最近文章</h2>
+            </div>
+            <div class="recent-posts" id="recent-posts-container">
+                <p class="loading">正在加载…</p>
+            </div>
+
+            <!-- 分类浏览区 -->
+            <div class="section-title">
+                <h2>分类浏览</h2>
+            </div>
+            <div class="category-grid" id="categories-container">
+                <p class="loading">正在加载…</p>
+            </div>
+        </section>
+
+        <!-- 目录浏览视图 -->
+        <section id="browse-view" style="display:none;">
+            <nav id="browse-breadcrumb" class="breadcrumb"></nav>
+            <div class="page-heading browse-heading">
+                <h2 id="browse-heading-title">浏览</h2>
+                <button class="rename-btn" id="rename-btn" title="重命名分类">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                </button>
+            </div>
+            <div class="browse-folders" id="browse-folders"></div>
+            <div class="browse-files" id="browse-files"></div>
+        </section>
+
+        <!-- 文章列表视图 -->
+        <section id="list-view" style="display:none;">
+            <nav id="list-breadcrumb" class="breadcrumb"></nav>
+            <div class="page-heading">
+                <h2 id="list-heading-title">文章</h2>
+            </div>
+            <div id="posts-container">
+                <p class="loading">正在加载…</p>
+            </div>
+        </section>
+
+        <!-- 文章详情视图 -->
+        <section id="post-view">
+            <nav id="post-breadcrumb" class="breadcrumb"></nav>
+            <header class="content-header">
+                <h2 id="view-title"></h2>
+                <p class="post-date" id="view-date"></p>
+            </header>
+            <hr class="content-divider">
+            <article id="view-content" class="markdown-body"></article>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 — 个人博客 · 以简驭繁</p>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/katex.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.16.9/contrib/auto-render.min.js"></script>
+    <script src="js/app.js?v=20260324-2"></script>
+</body>
+</html>

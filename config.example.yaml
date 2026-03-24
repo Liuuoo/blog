@@ -1,0 +1,27 @@
+blog:
+  title: 个人博客
+  subtitle: 随笔 · 技术 · 思考
+  author: 博主
+
+posts_dir: posts
+admin_password: change-me
+
+category_aliases: {}
+
+locked_categories:
+  个人心得: change-me
+  日记: change-me
+
+external_sources:
+  - path: "D:/Notes/Programming"
+    category: "编程教学"
+  - path: "D:/Notes/Projects"
+    category: "项目文档"
+  - path: "D:/Notes/DailyNote/2025"
+    category: "2025年日记"
+  - path: "D:/Notes/DailyNote/2026"
+    category: "2026日记"
+
+media_dirs:
+  - "D:/Notes"
+  - "D:/Assets"
