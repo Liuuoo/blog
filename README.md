@@ -279,10 +279,3 @@ python main.py
 | `GET` | `/api/posts/{slug}` | 获取文章正文或源码内容 |
 | `POST` | `/api/verify-password` | 验证分类密码 |
 | `POST` | `/api/admin/rename-category` | 修改分类显示名 |
-
-## 发布到 GitHub 前的建议
-
-- 不要提交真实的 `config.yaml`
-- 不要提交本机绝对路径和私人密码
-- 如果需要公开仓库，优先提交 `config.example.yaml`
-- 提交前确认 `posts/` 中没有不希望公开的内容
