@@ -225,6 +225,7 @@ blog/
 │  ├─ models.py            # 数据模型
 │  └─ state.py             # 运行时状态
 ├─ posts/                  # 本地文章目录
+├─ scripts/                # Windows 自启动注册脚本
 ├─ tests/                  # 回归测试
 ├─ web/                    # 前端静态资源
 ├─ main.py                 # 启动入口
@@ -251,13 +252,23 @@ node --check web/js/app.js
 
 ### Windows
 
-可以直接运行：
+手动启动：
 
 ```bash
 python main.py
 ```
 
 或者双击 `start_blog.bat`。
+这个脚本会固定到项目根目录启动，优先使用项目内的 `.venv\Scripts\python.exe`，找不到时再回退系统 `python`，并把日志写到 `%LOCALAPPDATA%\PersonalBlog\logs\startup.log`。
+
+静默开机自启动：
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\register_personal_blog_task.ps1
+```
+
+这个命令会创建或更新名为 `PersonalBlog` 的计划任务，在当前用户登录时隐藏运行 `start_blog.bat`，并移除旧的启动目录快捷方式 `PersonalBlog.lnk`。
+如果你移动了仓库目录，重新执行一次这个脚本即可刷新任务里的路径。
 
 ### Linux 服务器
 
